@@ -1,24 +1,32 @@
 package org.apache.coyote.http11.cookie;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HttpCookie {
-    private String JSESSIONID = "";
+    private final Map<String, String> cookies = new ConcurrentHashMap<>();
 
     public HttpCookie() {
     }
 
-    public String changeJSessionId(String jsessionId) {
-       JSESSIONID = jsessionId;
-       return JSESSIONID;
+    // JSESSIONID 값 설정
+    public void addJSessionId(String sessionId) {
+        cookies.put("JSESSIONID", sessionId);
     }
 
-    public String createJSession() {
-        JSESSIONID = UUID.randomUUID().toString();
-        return JSESSIONID;
-    }
-
+    // JSESSIONID 값 가져오기
     public String getJSessionId() {
-        return JSESSIONID;
+        return cookies.get("JSESSIONID");
+    }
+
+    // 서버 응답 헤더에 Set-Cookie 추가
+    public String addCookieInResponseHeader() {
+        StringBuilder header = new StringBuilder();
+        header.append("HTTP/1.1 200 OK\r\n");
+        header.append("Content-Length: 5571\r\n");
+        header.append("Content-Type: text/html;charset=utf-8\r\n");
+        header.append("Set-Cookie: JSESSIONID=").append(getJSessionId()).append("\r\n");
+        return header.toString();
     }
 }
