@@ -1,7 +1,5 @@
 package org.apache.coyote.http11.enums;
 
-import java.util.Arrays;
-
 public enum ContentType {
 
     JS(".js","Application/javascript;"),
@@ -17,11 +15,13 @@ public enum ContentType {
     }
 
     public static String getContentType(final String path) {
-        return Arrays.stream(ContentType.values())
-                .filter(value -> path.endsWith(value.getFileType()))
-                .findFirst()
-                .orElse(HTML)
-                .getPath();
+        if (path.endsWith(JS.getFileType())) {
+            return JS.getPath();
+        }
+        if (path.endsWith(CSS.getFileType())) {
+            return CSS.getPath();
+        }
+        return HTML.getPath();
     }
 
     public String getFileType() {
