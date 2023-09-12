@@ -8,13 +8,10 @@ public enum Path {
     REGISTER_URL("/register"),
 
     LOGIN_HTML("static/login.html"),
+    UNAUTHORIZED_HTML("static/401.html"),
     REGISTER_HTML("static/register.html"),
 
-    REDIRECT_INDEX_HTML("redirect:static/index.html"),
-    UNAUTHORIZED_HTML("redirect:static/401.html"),
-
-    STATIC("static"),
-    REDIRECT("redirect");
+    STATIC("static");
 
     private final String value;
 
