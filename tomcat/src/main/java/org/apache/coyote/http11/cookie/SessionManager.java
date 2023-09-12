@@ -4,24 +4,29 @@ import nextstep.jwp.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class SessionManager {
 
     private static final Map<User, String> sessions = new HashMap<>();
 
-    public static void add(final User user, HttpCookie httpCookie) {
-        sessions.put(user, httpCookie.getJSessionId());
+    public static void add(final User user, String jsessionId) {
+        sessions.put(user, jsessionId);
     }
 
-    public static boolean isValidUser(final User user, final String jsessionId) {
-        return sessions.entrySet().stream()
-                .anyMatch(userStringEntry ->
-                        userStringEntry.getKey().equals(user)
-                        && userStringEntry.getValue().equals(jsessionId)
-                );
+    public static boolean validUser(final User user) {
+        if(sessions.containsKey(user)) {
+            return true;
+        }
+
+        return false;
     }
 
-    public static boolean isValidHttpCookie(final HttpCookie httpCookie) {
-        return sessions.containsValue(httpCookie.getJSessionId());
+    public static boolean validJsession(final String jsession) {
+        if(sessions.containsValue(jsession)) {
+            return true;
+        }
+
+        return false;
     }
 }
