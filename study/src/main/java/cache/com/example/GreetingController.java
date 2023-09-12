@@ -1,16 +1,18 @@
 package cache.com.example;
 
-import cache.com.example.dto.RegisterRequest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 @Controller
 public class GreetingController {
@@ -21,28 +23,21 @@ public class GreetingController {
     }
 
     @GetMapping("/index.html")
-    public String indexHtml() {
+    public String accessIndexHtml() {
         return "index";
     }
 
-    @GetMapping("/login")
-    public String login(@RequestParam String account, @RequestParam String password) {
-        return "login";
-    }
+    @GetMapping("/css/styles.css")
+    @ResponseBody
+    public String getCss() throws IOException {
+        System.out.println("call");
+        Resource resource = new ClassPathResource("static/css/styles.css");
+        InputStream inputStream = resource.getInputStream();
 
-    @GetMapping("/login")
-    public String loginWithNoParams() {
-        return "login";
-    }
-
-    @GetMapping("/register")
-    public String register() {
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@RequestBody String requestBody) {
-        return "index";
+        try (Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8.name())) {
+            scanner.useDelimiter("\\A"); // 전체 내용을 읽기 위해 구분자 설정
+            return scanner.hasNext() ? scanner.next() : "";
+        }
     }
 
     /**
